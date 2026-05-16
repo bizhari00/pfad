@@ -36,4 +36,4 @@ def update_flow(n):
 
 if __name__ == '__main__':
     # Saat running di lokal
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
