@@ -7,13 +7,13 @@ import time
 # 1. KONFIGURASI HALAMAN STREAMLIT
 # ==========================================
 st.set_page_config(
-    page_title="PFAD Produksi Biodiesel",
+    page_title="Monitoring Produksi Biodiesel",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# URL Portal Utama Forio Epicenter Anda
-URL_PORTAL_FORIO = "https://epicenter.forio.com/app/bustamiizhari/inl"
+# URL Portal Publik Forio Epicenter Anda
+URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
 
 # Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
 st.markdown(
@@ -28,20 +28,41 @@ st.markdown(
         font-family: 'Arial', sans-serif;
         margin-bottom: 20px;
     }
+    /* Style kustom untuk menyamakan tombol HTML dengan tema Streamlit */
+    .custom-back-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        color: #31333F;
+        border: 1px solid rgba(49, 51, 63, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.16s ease-in-out;
+        width: 100%;
+        height: 42px;
+    }
+    .custom-back-btn:hover {
+        border-color: #ff4b4b;
+        color: #ff4b4b;
+        background-color: rgba(255, 75, 75, 0.05);
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
 
 # --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
-# Membuat kolom agar tombol berada di sebelah kiri atas secara rapi
 col_nav, _ = st.columns([2, 5])
 with col_nav:
-    st.link_button(
-        label="🏠 Kembali ke Menu Utama", 
-        url=URL_PORTAL_FORIO, 
-        use_container_width=True,
-        help="Klik di sini untuk kembali ke halaman utama Portal Research Day"
+    # Menggunakan HTML Anchor dengan target="_top" untuk menjebol sandbox iframe Forio
+    st.markdown(
+        f'<a href="{URL_PORTAL_FORIO}" target="_top" class="custom-back-btn">🏠 Kembali ke Menu Utama</a>', 
+        unsafe_allow_html=True
     )
 
 st.markdown("<h1>Monitoring Produksi Biodiesel</h1>", unsafe_allow_html=True)
@@ -89,30 +110,23 @@ flow_path = [
 # ==========================================
 # 4. LOGIKA ANIMASI JALUR PROSES (DENGAN KEY DINAMIS)
 # ==========================================
-# Wadah dinamis untuk merender ulang chart tanpa membuat komponen baru di halaman
 placeholder = st.empty()
-
-# Counter global untuk menghasilkan ID elemen unik di setiap iterasi render
 render_count = 0
 
-# Loop tak terbatas untuk menyimulasikan dcc.Interval (SCADA real-time monitoring)
 while True:
     for step in range(len(flow_path)):
         current = flow_path[step]
         
-        # Membuat base figure Plotly dari gambar skema pabrik
         fig = px.imshow(img)
         
-        # --- EFEK PERUBAHAN WARNA BLOK ---
         area = current['tank_area']
         fig.add_shape(
             type="rect",
             x0=area[0], y0=area[1], x1=area[2], y1=area[3],
-            fillcolor="rgba(0, 255, 0, 0.4)",  # Hijau transparan
+            fillcolor="rgba(0, 255, 0, 0.4)",  
             line=dict(color="LimeGreen", width=2),
         )
         
-        # --- INDIKATOR ALIRAN PROSES ---
         fig.add_scatter(
             x=[current['x']], y=[current['y']],
             mode="markers+text",
@@ -122,7 +136,6 @@ while True:
             textfont=dict(size=18, color="darkred", family="Arial Black")
         )
         
-        # Pengaturan kebersihan canvas grafik
         fig.update_xaxes(visible=False)
         fig.update_yaxes(visible=False)
         fig.update_layout(
@@ -130,7 +143,6 @@ while True:
             height=650
         )
         
-        # Merender chart ke dalam kontainer kosong dengan key unik buatan
         with placeholder.container():
             st.plotly_chart(
                 fig, 
@@ -139,8 +151,5 @@ while True:
                 key=f"plotly_render_{render_count}"
             )
         
-        # Naikkan counter ID untuk iterasi berikutnya
         render_count += 1
-        
-        # Jeda waktu pergantian langkah (1.5 detik)
         time.sleep(1.5)
