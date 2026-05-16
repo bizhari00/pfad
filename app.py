@@ -78,7 +78,7 @@ except FileNotFoundError:
 # ==========================================
 KOTAK_METANOL = [65, 110, 140, 230]
 KOTAK_H2SO4   = [65, 260, 140, 370]
-KOTAK_NAOH    = [300, 70, 360, 200]
+KOTAK_NAOH    = [370, 60, 420, 140]
 
 # Posisi Y konstan untuk penanda panah kuning di bawah diagram proses
 y_arrow = 550 
