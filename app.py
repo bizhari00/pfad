@@ -107,7 +107,8 @@ flow_path = [
     },
     {
         'step_id': 'reaktor2',
-        'x': 510, 'y': y_arrow, 'label': 'Reaktor 2 Aktif', 
+        # REVISI: 'x' digeser ke 630 agar tepat di tengah bawah fisik Reaktor 2
+        'x': 630, 'y': y_arrow, 'label': 'Reaktor 2 Aktif', 
         'tank_area': [600, 400, 660, 530]
     },
     {
