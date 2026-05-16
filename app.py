@@ -7,13 +7,13 @@ import time
 # 1. KONFIGURASI HALAMAN STREAMLIT
 # ==========================================
 st.set_page_config(
-    page_title="Monitoring Produksi Biodiesel",
+    page_title="PFAD Produksi Biodiesel",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # URL Portal Utama Forio Epicenter Anda
-URL_PORTAL_FORIO = "https://epicenter.forio.com/app/bustamiizhari/research-day-2025/index.html"
+URL_PORTAL_FORIO = "https://epicenter.forio.com/app/bustamiizhari/research-day-2025/"
 
 # Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
 st.markdown(
