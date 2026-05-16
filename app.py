@@ -4,6 +4,17 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import numpy as np
 
+import os
+import sys
+
+# Menambahkan direktori aktif saat ini ke dalam sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
+
+# Baru setelah itu lakukan import
+from streamlit_dash import streamlit_dash
+
+
 # 1. Inisialisasi Aplikasi Dash
 app = dash.Dash(__name__)
 
