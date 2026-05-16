@@ -74,8 +74,8 @@ except FileNotFoundError:
 # ==========================================
 # 3. KORDINAT AKURAT BERDASARKAN GRID ASLI (x0, y0, x1, y1)
 # ==========================================
-KOTAK_METANOL = [40, 110, 100, 230]
-KOTAK_H2SO4   = [40, 260, 100, 370]
+KOTAK_METANOL = [40, 80, 100, 230]
+KOTAK_H2SO4   = [40, 240, 100, 370]
 KOTAK_NAOH    = [370, 40, 420, 140]
 
 y_arrow = 550 
@@ -87,7 +87,7 @@ flow_path = [
         'multiple_areas': [
             KOTAK_METANOL,
             KOTAK_H2SO4,
-            [40, 420, 100, 520]
+            [40, 400, 100, 520]
         ]
     },
     {
