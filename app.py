@@ -173,7 +173,7 @@ while True:
             x=[current['x']], y=[current['y']], mode="markers+text",
             marker=dict(size=35, color="yellow", symbol="triangle-right", line=dict(width=3, color="orange")),
             text=[current['label']], textposition="bottom center",
-            textfont=dict(size=26, color="darkred", family="Arial Black")
+            textfont=dict(size=21, color="darkred", family="Arial Black")
         )
         
         fig.update_layout(margin=dict(l=5, r=5, t=5, b=5), height=680)
