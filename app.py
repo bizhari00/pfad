@@ -1,8 +1,3 @@
-Berikut adalah Full Script lengkap untuk file app.py Anda. Di dalam kode ini, penanganan ID unik (key) menggunakan render_count sudah diintegrasikan langsung ke dalam perulangan while True agar Streamlit Cloud tidak memicu error StreamlitDuplicateElementId lagi.
-
-Silakan salin seluruh kode di bawah ini dan timpa (overwrite) isi file app.py Anda di GitHub secara keseluruhan:
-
-Python
 import streamlit as st
 import plotly.express as px
 from PIL import Image
