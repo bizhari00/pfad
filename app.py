@@ -128,7 +128,7 @@ flow_path = [
     {
         'step_id': 'biodiesel',
         'x': 900, 'y': y_arrow, 'label': 'Produk Biodiesel', 
-        'tank_area': [870, 420, 935, 550]
+        'tank_area': [1150, 420, 935, 1250]
     }
 ]
 
