@@ -65,7 +65,7 @@ with col_nav:
         unsafe_allow_html=True
     )
 
-st.markdown("<h1>Monitoring Produksi Biodiesel</h1>", unsafe_allow_html=True)
+st.markdown("<h1>PFAD Produksi Biodiesel</h1>", unsafe_allow_html=True)
 
 # ==========================================
 # 2. MEMUAT BACKGROUND IMAGE
