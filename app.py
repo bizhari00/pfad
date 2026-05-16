@@ -1,3 +1,8 @@
+Berikut adalah gabungan kode skrip Streamlit Anda yang telah disisipkan tombol "🏠 Kembali ke Menu Utama".
+
+Tombol ini diletakkan tepat di atas judul halaman utama dan dibungkus di dalam kolom agar ukurannya proporsional dan tidak merusak estetika sistem monitoring SCADA Anda.
+
+Python
 import streamlit as st
 import plotly.express as px
 from PIL import Image
@@ -11,6 +16,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# URL Portal Utama Forio Epicenter Anda
+URL_PORTAL_FORIO = "https://epicenter.forio.com/app/bustamiizhari/research-day-2025/index.html"
 
 # Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
 st.markdown(
@@ -29,6 +37,17 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
+# Membuat kolom agar tombol berada di sebelah kiri atas secara rapi
+col_nav, _ = st.columns([2, 5])
+with col_nav:
+    st.link_button(
+        label="🏠 Kembali ke Menu Utama", 
+        url=URL_PORTAL_FORIO, 
+        use_container_width=True,
+        help="Klik di sini untuk kembali ke halaman utama Portal Research Day"
+    )
 
 st.markdown("<h1>Monitoring Produksi Biodiesel</h1>", unsafe_allow_html=True)
 
