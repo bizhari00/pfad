@@ -91,7 +91,7 @@ flow_path = [
     },
     {
         'step_id': 'reaktor1',
-        'x': 320, 'y': y_arrow, 'label': 'Reaktor 1 Aktif', 
+        'x': 320, 'y': y_arrow, 'label': 'Reaktor 1 Aktif (Esterifikasi)', 
         'tank_area': [295, 400, 360, 510]
     },
     {
@@ -101,7 +101,7 @@ flow_path = [
     },
     {
         'step_id': 'reaktor2',
-        'x': 630, 'y': y_arrow, 'label': 'Reaktor 2 Aktif', 
+        'x': 630, 'y': y_arrow, 'label': 'Reaktor 2 Aktif (TransEsterifikasi)', 
         'tank_area': [600, 400, 660, 500]
     },
     {
