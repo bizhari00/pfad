@@ -28,8 +28,8 @@ st.markdown(
         font-family: 'Arial', sans-serif;
         margin-bottom: 20px;
     }
-    /* Style tombol kustom agar menyatu rapi dengan UI Streamlit */
-    .custom-parent-btn {
+    /* Style tombol kustom agar serasi dengan UI Streamlit */
+    .custom-tab-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -46,7 +46,7 @@ st.markdown(
         width: 100%;
         height: 42px;
     }
-    .custom-parent-btn:hover {
+    .custom-tab-btn:hover {
         border-color: #ff4b4b;
         color: #ff4b4b;
         background-color: rgba(255, 75, 75, 0.05);
@@ -59,9 +59,9 @@ st.markdown(
 # --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
 col_nav, _ = st.columns([2, 5])
 with col_nav:
-    # Menggunakan target="_parent" untuk memindahkan frame satu tingkat di atas iframe Streamlit
+    # Menggunakan target="_blank" agar klik kiri langsung otomatis membuka tab baru (sukses melompati blokir iframe)
     st.markdown(
-        f'<a href="{URL_PORTAL_FORIO}" target="_parent" class="custom-parent-btn">🏠 Kembali ke Menu Utama</a>', 
+        f'<a href="{URL_PORTAL_FORIO}" target="_blank" class="custom-tab-btn">🏠 Kembali ke Menu Utama</a>', 
         unsafe_allow_html=True
     )
 
@@ -108,7 +108,7 @@ flow_path = [
 ]
 
 # ==========================================
-# 4. LOGIKA ANIMASI JALUR PROSES (DENGAN KEY DINAMIS)
+# 4. LOGIKA ANIMASI JALUR PROSES
 # ==========================================
 placeholder = st.empty()
 render_count = 0
