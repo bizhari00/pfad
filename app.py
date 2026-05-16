@@ -87,7 +87,7 @@ flow_path = [
         'multiple_areas': [
             KOTAK_METANOL,
             KOTAK_H2SO4,
-            [65, 420, 140, 520]
+            [40, 420, 100, 520]
         ]
     },
     {
