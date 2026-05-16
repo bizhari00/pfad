@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # URL Portal Utama Forio Epicenter Anda
-URL_PORTAL_FORIO = "https://epicenter.forio.com/app/bustamiizhari/research-day-2025/"
+URL_PORTAL_FORIO = "https://epicenter.forio.com/app/bustamiizhari/inl"
 
 # Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
 st.markdown(
