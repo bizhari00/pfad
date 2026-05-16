@@ -36,7 +36,7 @@ st.markdown(
         padding: 0.4rem 1rem;
         border-radius: 0.5rem;
         font-weight: 500;
-        font-size: 1rem;
+        font-size: 1.6rem;
         text-decoration: none;
         cursor: pointer;
         transition: background-color 0.16s ease-in-out;
