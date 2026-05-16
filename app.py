@@ -59,7 +59,7 @@ st.markdown(
 # --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
 col_nav, _ = st.columns([2, 5])
 with col_nav:
-    # Menggunakan target="_blank" agar klik kiri langsung otomatis membuka tab baru (sukses melompati blokir iframe)
+    # Menggunakan target="_blank" agar klik kiri langsung otomatis membuka tab baru
     st.markdown(
         f'<a href="{URL_PORTAL_FORIO}" target="_blank" class="custom-tab-btn">🏠 Kembali ke Menu Utama</a>', 
         unsafe_allow_html=True
@@ -77,35 +77,42 @@ except FileNotFoundError:
     st.stop()
 
 # ==========================================
-# 3. DEFINISI JALUR ALIRAN REVISI (URUTAN ASLI DIAGRAM)
+# 3. DEFINISI JALUR ALIRAN LENGKAP (8 TAHAPAN)
 # ==========================================
-# Koordinat sumbu Y disesuaikan dengan level posisi tangki utama di gambar (sekitar 700 - 800)
-y_flow = 740 
+y_flow = 850 
 
 flow_path = [
     {
-        'x': 90, 'y': 740, 'label': 'Persiapan Bahan (PFAD)', 
-        'tank_area': [45, 640, 130, 790]
+        'x': 100, 'y': y_flow, 'label': 'Feedstock (PFAD)', 
+        'tank_area': [50, 150, 150, 350]
     },
     {
-        'x': 390, 'y': 740, 'label': 'Proses Reaktor', 
-        'tank_area': [350, 640, 425, 790]
+        'x': 285, 'y': y_flow, 'label': 'Reaktor 1 Aktif', 
+        'tank_area': [240, 680, 330, 830]
     },
     {
-        'x': 490, 'y': 740, 'label': 'Proses Separator', 
-        'tank_area': [455, 640, 525, 790]
+        'x': 410, 'y': y_flow, 'label': 'Separator 1 Aktif', 
+        'tank_area': [370, 680, 450, 830]
     },
     {
-        'x': 700, 'y': 740, 'label': 'Wash Drum Aktif', 
-        'tank_area': [665, 640, 735, 790]
+        'x': 535, 'y': y_flow, 'label': 'Reaktor 2 Aktif', 
+        'tank_area': [490, 680, 580, 830]
     },
     {
-        'x': 770, 'y': 740, 'label': 'Evaporator Aktif', 
-        'tank_area': [740, 640, 805, 790]
+        'x': 660, 'y': y_flow, 'label': 'Separator 2 Aktif', 
+        'tank_area': [620, 680, 700, 830]
     },
     {
-        'x': 860, 'y': 740, 'label': 'Produk Biodiesel', 
-        'tank_area': [825, 640, 890, 790]
+        'x': 740, 'y': y_flow, 'label': 'Wash Drum Aktif', 
+        'tank_area': [710, 680, 775, 830]
+    },
+    {
+        'x': 810, 'y': y_flow, 'label': 'Evaporator Aktif', 
+        'tank_area': [780, 680, 845, 830]
+    },
+    {
+        'x': 950, 'y': y_flow, 'label': 'Produk Biodiesel', 
+        'tank_area': [900, 680, 1000, 830]
     }
 ]
 
