@@ -12,7 +12,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# URL Portal Publik Forio Epicenter Anda
 URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
 
 st.markdown(
@@ -54,7 +53,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
 col_nav, _ = st.columns([2, 5])
 with col_nav:
     st.markdown(
@@ -80,19 +78,16 @@ KOTAK_METANOL = [65, 110, 140, 230]
 KOTAK_H2SO4   = [65, 260, 140, 370]
 KOTAK_NAOH    = [370, 60, 420, 140]
 
-# Posisi Y konstan untuk penanda panah kuning di bawah diagram proses
 y_arrow = 550 
 
-# Jalur Aliran Berurutan (8 Langkah Utama)
 flow_path = [
     {
         'step_id': 'feedstock_prep',
         'x': 90, 'y': y_arrow, 'label': 'Persiapan Bahan Awal',
-        # Menyimpan banyak area untuk diaktifkan bersamaan pada langkah pertama
         'multiple_areas': [
             KOTAK_METANOL,
             KOTAK_H2SO4,
-            [65, 420, 140, 520]  # KOTAK_PFAD
+            [65, 420, 140, 520]
         ]
     },
     {
@@ -107,28 +102,27 @@ flow_path = [
     },
     {
         'step_id': 'reaktor2',
-        # REVISI: 'x' digeser ke 630 agar tepat di tengah bawah fisik Reaktor 2
         'x': 630, 'y': y_arrow, 'label': 'Reaktor 2 Aktif', 
         'tank_area': [600, 400, 660, 530]
     },
     {
         'step_id': 'separator2',
-        'x': 640, 'y': y_arrow, 'label': 'Separator 2 Aktif', 
-        'tank_area': [760, 400, 850, 500]
+        'x': 745, 'y': y_arrow, 'label': 'Separator 2 Aktif', 
+        'tank_area': [710, 410, 775, 500]
     },
     {
         'step_id': 'washdrum',
-        'x': 720, 'y': y_arrow, 'label': 'Wash Drum Aktif', 
+        'x': 920, 'y': y_arrow, 'label': 'Wash Drum Aktif', 
         'tank_area': [890, 400, 950, 500]
     },
     {
         'step_id': 'evaporator',
-        'x': 800, 'y': y_arrow, 'label': 'Evaporator Aktif', 
+        'x': 1025, 'y': y_arrow, 'label': 'Evaporator Aktif', 
         'tank_area': [1000, 410, 1050, 500]
     },
     {
         'step_id': 'biodiesel',
-        'x': 900, 'y': y_arrow, 'label': 'Produk Biodiesel', 
+        'x': 1200, 'y': y_arrow, 'label': 'Produk Biodiesel', 
         'tank_area': [1150, 400, 1250, 530]
     }
 ]
@@ -142,43 +136,33 @@ render_count = 0
 while True:
     for step in range(len(flow_path)):
         current = flow_path[step]
-        
         fig = px.imshow(img)
         
-        # Sembunyikan garis aksis koordinat untuk mode produksi/tampilan bersih
         fig.update_xaxes(visible=False)
         fig.update_yaxes(visible=False)
         
         # 1. LOGIKA PEWARNAAN KOTAK HIJAU TRANSPARAN
         if 'multiple_areas' in current:
-            # Jika langkah persiapan awal: Metanol, H2SO4, dan PFAD menyala bersamaan
             for area in current['multiple_areas']:
                 fig.add_shape(
-                    type="rect",
-                    x0=area[0], y0=area[1], x1=area[2], y1=area[3],
-                    fillcolor="rgba(0, 255, 0, 0.4)",  
-                    line=dict(color="LimeGreen", width=2),
+                    type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                    fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2),
                 )
         else:
-            # Langkah normal: nyalakan tangki proses utama yang bersangkutan
             area = current['tank_area']
             fig.add_shape(
-                type="rect",
-                x0=area[0], y0=area[1], x1=area[2], y1=area[3],
-                fillcolor="rgba(0, 255, 0, 0.4)",  
-                line=dict(color="LimeGreen", width=2),
+                type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2),
             )
             
-        # 2. LOGIKA KONDISIONAL TANGKI PROSES ATAS (BAHAN KIMIA TAMBAHAN)
+        # 2. LOGIKA KONDISIONAL TANGKI PROSES ATAS
         if current['step_id'] == 'reaktor1':
-            # Saat Reaktor 1 aktif, Metanol & H2SO4 ikut menyala (menandakan suplai mengalir masuk)
             for area in [KOTAK_METANOL, KOTAK_H2SO4]:
                 fig.add_shape(
                     type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
                     fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
                 )
         elif current['step_id'] == 'reaktor2':
-            # Saat Reaktor 2 aktif, NaOH di bagian atas ikut menyala
             fig.add_shape(
                 type="rect", x0=KOTAK_NAOH[0], y0=KOTAK_NAOH[1], x1=KOTAK_NAOH[2], y1=KOTAK_NAOH[3],
                 fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
@@ -186,26 +170,16 @@ while True:
 
         # 3. PENANDA PANAH SEGITIGA KUNING ANIMASI
         fig.add_scatter(
-            x=[current['x']], y=[current['y']],
-            mode="markers+text",
+            x=[current['x']], y=[current['y']], mode="markers+text",
             marker=dict(size=35, color="yellow", symbol="triangle-right", line=dict(width=3, color="orange")),
-            text=[current['label']],
-            textposition="bottom center",
+            text=[current['label']], textposition="bottom center",
             textfont=dict(size=18, color="darkred", family="Arial Black")
         )
         
-        fig.update_layout(
-            margin=dict(l=5, r=5, t=5, b=5),
-            height=680
-        )
+        fig.update_layout(margin=dict(l=5, r=5, t=5, b=5), height=680)
         
         with placeholder.container():
-            st.plotly_chart(
-                fig, 
-                use_container_width=True, 
-                config={'displayModeBar': False}, 
-                key=f"plotly_render_{render_count}"
-            )
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False}, key=f"plotly_render_{render_count}")
         
         render_count += 1
         time.sleep(1.8)
