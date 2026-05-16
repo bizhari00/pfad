@@ -1,6 +1,3 @@
-Berikut adalah gabungan kode skrip Streamlit Anda yang telah disisipkan tombol "🏠 Kembali ke Menu Utama".
-
-Tombol ini diletakkan tepat di atas judul halaman utama dan dibungkus di dalam kolom agar ukurannya proporsional dan tidak merusak estetika sistem monitoring SCADA Anda.
 
 Python
 import streamlit as st
