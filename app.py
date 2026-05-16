@@ -7,13 +7,65 @@ import time
 # 1. KONFIGURASI HALAMAN STREAMLIT
 # ==========================================
 st.set_page_config(
-    page_title="Kalibrasi Animasi Bergerak",
+    page_title="PFAD Produksi Biodiesel",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-st.markdown("<h1 style='text-align: center;'>🔧 Mode Kalibrasi Aliran Bergerak</h1>", unsafe_allow_html=True)
-st.write("Animasi otomatis tetap berjalan. Perhatikan pergeseran kotak hijau dan catat angka grid x, y yang meleset!")
+# URL Portal Publik Forio Epicenter Anda
+URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
+
+# Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
+st.markdown(
+    """
+    <style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 0rem;
+    }
+    h1 {
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+    /* Style tombol kustom agar serasi dengan UI Streamlit */
+    .custom-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        color: #31333F;
+        border: 1px solid rgba(49, 51, 63, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.16s ease-in-out;
+        width: 100%;
+        height: 42px;
+    }
+    .custom-tab-btn:hover {
+        border-color: #ff4b4b;
+        color: #ff4b4b;
+        background-color: rgba(255, 75, 75, 0.05);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
+col_nav, _ = st.columns([2, 5])
+with col_nav:
+    # Menggunakan target="_blank" agar klik kiri langsung otomatis membuka tab baru (sukses melompati blokir iframe)
+    st.markdown(
+        f'<a href="{URL_PORTAL_FORIO}" target="_blank" class="custom-tab-btn">🏠 Kembali ke Menu Utama</a>', 
+        unsafe_allow_html=True
+    )
+
+st.markdown("<h1>PFAD Biodiesel</h1>", unsafe_allow_html=True)
 
 # ==========================================
 # 2. MEMUAT BACKGROUND IMAGE
@@ -25,61 +77,48 @@ except FileNotFoundError:
     st.stop()
 
 # ==========================================
-# 3. KORDINAT TANGKI PEMBANTU (ATAS)
+# 3. DEFINISI JALUR ALIRAN REVISI (URUTAN ASLI DIAGRAM)
 # ==========================================
-TANGKI_METANOL = [245, 370, 285, 470]
-TANGKI_H2SO4   = [245, 500, 285, 610]
-TANGKI_NAOH    = [410, 335, 455, 435]
-
-# ==========================================
-# 4. JALUR ALIRAN LENGKAP (8 TAHAPAN)
-# ==========================================
-y_flow = 850 
+# Koordinat sumbu Y disesuaikan dengan level posisi tangki utama di gambar (sekitar 700 - 800)
+# y_flow = 740 
 
 flow_path = [
     {
-        'step_id': 'feedstock',
-        'x': 100, 'y': y_flow, 'label': 'Feedstock (PFAD)', 
-        'tank_area': [50, 150, 150, 350]
+        'step_id': 'pre_treatment',
+        'x': 100, 'y': 850, 'label': 'Persiapan Metanol, H2SO4, PFAD', 
+        # Area tangki yang menyala bersamaan di langkah 1 (koordinat presisi dari grid)
+        'metanol_area': [145, 80, 310, 210], # Kiri-Atas (Metanol + H2SO4 dalam satu kotak)
+        'pfad_area': [135, 400, 215, 520]     # Kiri-Bawah (PFAD)
     },
     {
-        'step_id': 'reaktor1',
-        'x': 285, 'y': y_flow, 'label': 'Reaktor 1 Aktif', 
-        'tank_area': [240, 680, 330, 830]
+        'step_id': 'reaktor',
+        'x': 320, 'y': 850, 'label': 'Proses Reaktor', 
+        'tank_area': [290, 340, 375, 500]     # Tangki Reaktor di tengah
     },
     {
-        'step_id': 'separator1',
-        'x': 410, 'y': y_flow, 'label': 'Separator 1 Aktif', 
-        'tank_area': [370, 680, 450, 830]
-    },
-    {
-        'step_id': 'reaktor2',
-        'x': 535, 'y': y_flow, 'label': 'Reaktor 2 Aktif', 
-        'tank_area': [490, 680, 580, 830]
-    },
-    {
-        'step_id': 'separator2',
-        'x': 660, 'y': y_flow, 'label': 'Separator 2 Aktif', 
-        'tank_area': [620, 680, 700, 830]
+        'step_id': 'separator',
+        'x': 420, 'y': 850, 'label': 'Proses Separator', 
+        'tank_area': [380, 420, 460, 520]     # Tangki Separator di kanan reaktor
     },
     {
         'step_id': 'washdrum',
-        'x': 740, 'y': y_flow, 'label': 'Wash Drum Aktif', 
-        'tank_area': [710, 680, 775, 830]
+        'x': 600, 'y': 850, 'label': 'Wash Drum Aktif', 
+        'tank_area': [560, 420, 640, 520]     # Tangki Wash Drum
     },
     {
-        'x': 810, 'y': y_flow, 'label': 'Evaporator Aktif', 
-        'tank_area': [780, 680, 845, 830]
+        'step_id': 'evaporator',
+        'x': 710, 'y': 850, 'label': 'Evaporator Aktif', 
+        'tank_area': [670, 420, 750, 520]     # Tangki Evaporator
     },
     {
         'step_id': 'biodiesel',
-        'x': 950, 'y': y_flow, 'label': 'Produk Biodiesel', 
-        'tank_area': [900, 680, 1000, 830]
+        'x': 860, 'y': 850, 'label': 'Produk Biodiesel', 
+        'tank_area': [800, 420, 920, 520]     # Tangki Produk Akhir
     }
 ]
 
 # ==========================================
-# 5. LOGIKA ANIMASI JALUR PROSES + TAMPILAN GRID
+# 4. LOGIKA ANIMASI JALUR PROSES
 # ==========================================
 placeholder = st.empty()
 render_count = 0
@@ -90,36 +129,35 @@ while True:
         
         fig = px.imshow(img)
         
-        # --- AKTIFKAN UTALITAS GRID UNTUK TRACKING ---
-        fig.update_xaxes(visible=True, showgrid=True, gridcolor="rgba(255, 0, 0, 0.35)", dtick=50)
-        fig.update_yaxes(visible=True, showgrid=True, gridcolor="rgba(255, 0, 0, 0.35)", dtick=50)
+        # LOGIKA KHUSUS LANGKAH 1: MENYALAKAN METANOL, H2SO4, DAN PFAD BERSAMAAN
+        if current.get('step_id') == 'pre_treatment':
+            # Gambar kotak hijau untuk area Metanol & H2SO4
+            area_mtl = current['metanol_area']
+            fig.add_shape(
+                type="rect",
+                x0=area_mtl[0], y0=area_mtl[1], x1=area_mtl[2], y1=area_mtl[3],
+                fillcolor="rgba(0, 255, 0, 0.4)",  # Hijau transparan
+                line=dict(color="LimeGreen", width=2),
+            )
+            # Gambar kotak hijau untuk area PFAD
+            area_pfd = current['pfad_area']
+            fig.add_shape(
+                type="rect",
+                x0=area_pfd[0], y0=area_pfd[1], x1=area_pfd[2], y1=area_pfd[3],
+                fillcolor="rgba(0, 255, 0, 0.4)",  # Hijau transparan
+                line=dict(color="LimeGreen", width=2),
+            )
+        else:
+            # Langkah-langkah lain hanya menyalakan satu kotak hijau
+            area = current['tank_area']
+            fig.add_shape(
+                type="rect",
+                x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                fillcolor="rgba(0, 255, 0, 0.4)",  
+                line=dict(color="LimeGreen", width=2),
+            )
         
-        # 1. Gambar kotak hijau alur utama yang aktif
-        main_area = current['tank_area']
-        fig.add_shape(
-            type="rect",
-            x0=main_area[0], y0=main_area[1], x1=main_area[2], y1=main_area[3],
-            fillcolor="rgba(0, 255, 0, 0.4)",  
-            line=dict(color="LimeGreen", width=2),
-        )
-        
-        # 2. Logika kondisional tangki atas ikut berubah warna
-        if current.get('step_id') == 'reaktor1':
-            fig.add_shape(
-                type="rect", x0=TANGKI_METANOL[0], y0=TANGKI_METANOL[1], x1=TANGKI_METANOL[2], y1=TANGKI_METANOL[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
-            )
-            fig.add_shape(
-                type="rect", x0=TANGKI_H2SO4[0], y0=TANGKI_H2SO4[1], x1=TANGKI_H2SO4[2], y1=TANGKI_H2SO4[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
-            )
-        elif current.get('step_id') == 'reaktor2':
-            fig.add_shape(
-                type="rect", x0=TANGKI_NAOH[0], y0=TANGKI_NAOH[1], x1=TANGKI_NAOH[2], y1=TANGKI_NAOH[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
-            )
-
-        # 3. Penanda panah animasi segitiga kuning
+        # Tambahkan panah animasi segitiga kuning (sumbu Y di 850 sesuai gambar grid Anda)
         fig.add_scatter(
             x=[current['x']], y=[current['y']],
             mode="markers+text",
@@ -129,10 +167,11 @@ while True:
             textfont=dict(size=18, color="darkred", family="Arial Black")
         )
         
+        fig.update_xaxes(visible=False)
+        fig.update_yaxes(visible=False)
         fig.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
-            height=700,
-            hovermode="closest"
+            margin=dict(l=5, r=5, t=5, b=5),
+            height=650
         )
         
         with placeholder.container():
@@ -144,4 +183,4 @@ while True:
             )
         
         render_count += 1
-        time.sleep(1.8)
+        time.sleep(1.5)
