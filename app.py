@@ -108,7 +108,7 @@ flow_path = [
     {
         'step_id': 'reaktor2',
         'x': 510, 'y': y_arrow, 'label': 'Reaktor 2 Aktif', 
-        'tank_area': [480, 400, 545, 530]
+        'tank_area': [600, 400, 660, 530]
     },
     {
         'step_id': 'separator2',
