@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# URL Portal Publik Forio Epicenter Anda yang sesungguhnya
+# URL Portal Publik Forio Epicenter Anda
 URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
 
 # Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
@@ -28,24 +28,25 @@ st.markdown(
         font-family: 'Arial', sans-serif;
         margin-bottom: 20px;
     }
-    /* Mengubah tampilan tombol standar menjadi tombol navigasi yang rapi */
-    .btn-breakout {
+    /* Style tombol kustom agar menyatu rapi dengan UI Streamlit */
+    .custom-parent-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         background-color: #ffffff;
         color: #31333F;
         border: 1px solid rgba(49, 51, 63, 0.2);
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 1rem;
         border-radius: 0.5rem;
         font-weight: 500;
         font-size: 1rem;
+        text-decoration: none;
         cursor: pointer;
+        transition: background-color 0.16s ease-in-out;
         width: 100%;
         height: 42px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease-in-out;
     }
-    .btn-breakout:hover {
+    .custom-parent-btn:hover {
         border-color: #ff4b4b;
         color: #ff4b4b;
         background-color: rgba(255, 75, 75, 0.05);
@@ -58,13 +59,11 @@ st.markdown(
 # --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
 col_nav, _ = st.columns([2, 5])
 with col_nav:
-    # Menggunakan Javascript window.parent untuk memaksa frame utama Forio berpindah halaman
-    tombol_html = f"""
-    <button class="btn-breakout" onclick="window.parent.location.href='{URL_PORTAL_FORIO}';">
-        🏠 Kembali ke Menu Utama
-    </button>
-    """
-    st.markdown(tombol_html, unsafe_allow_html=True)
+    # Menggunakan target="_parent" untuk memindahkan frame satu tingkat di atas iframe Streamlit
+    st.markdown(
+        f'<a href="{URL_PORTAL_FORIO}" target="_parent" class="custom-parent-btn">🏠 Kembali ke Menu Utama</a>', 
+        unsafe_allow_html=True
+    )
 
 st.markdown("<h1>Monitoring Produksi Biodiesel</h1>", unsafe_allow_html=True)
 
@@ -82,30 +81,30 @@ except FileNotFoundError:
 # ==========================================
 y_flow = 850 
 flow_path = [
-    {{
+    {
         'x': 100, 'y': y_flow, 'label': 'Persiapan Bahan', 
         'tank_area': [50, 150, 150, 350]
-    }},
-    {{
+    },
+    {
         'x': 285, 'y': y_flow, 'label': 'Reaktor 1 Aktif', 
         'tank_area': [240, 680, 330, 830]
-    }},
-    {{
+    },
+    {
         'x': 410, 'y': y_flow, 'label': 'Separator 1 Aktif', 
         'tank_area': [370, 680, 450, 830]
-    }},
-    {{
+    },
+    {
         'x': 535, 'y': y_flow, 'label': 'Reaktor 2 Aktif', 
         'tank_area': [490, 680, 580, 830]
-    }},
-    {{
+    },
+    {
         'x': 660, 'y': y_flow, 'label': 'Separator 2 Aktif', 
         'tank_area': [620, 680, 700, 830]
-    }},
-    {{
+    },
+    {
         'x': 950, 'y': y_flow, 'label': 'Produk Biodiesel', 
         'tank_area': [900, 680, 1000, 830]
-    }}
+    }
 ]
 
 # ==========================================
@@ -148,7 +147,7 @@ while True:
             st.plotly_chart(
                 fig, 
                 use_container_width=True, 
-                config={{'displayModeBar': False}}, 
+                config={'displayModeBar': False}, 
                 key=f"plotly_render_{render_count}"
             )
         
