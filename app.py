@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-st.markdown("<h1 style='text-align: center;'>🔧 Mode Kalibrasi Aliran Bergerak</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🔧 PFAD Biodiesel</h1>", unsafe_allow_html=True)
 st.write("Animasi otomatis tetap berjalan. Perhatikan pergeseran kotak hijau dan catat angka grid x, y yang meleset!")
 
 # ==========================================
@@ -45,7 +45,7 @@ flow_path = [
     {
         'step_id': 'reaktor1',
         'x': 285, 'y': y_flow, 'label': 'Reaktor 1 Aktif', 
-        'tank_area': [300, 400, 350, 500]
+        'tank_area': [300, 350, 400, 500]
     },
     {
         'step_id': 'separator1',
