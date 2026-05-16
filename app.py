@@ -7,13 +7,62 @@ import time
 # 1. KONFIGURASI HALAMAN STREAMLIT
 # ==========================================
 st.set_page_config(
-    page_title="Kalibrasi Animasi Bergerak",
+    page_title="PFAD Produksi Biodiesel",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-st.markdown("<h1 style='text-align: center;'>🔧 PFAD Biodiesel</h1>", unsafe_allow_html=True)
-st.write("Animasi otomatis tetap berjalan. Perhatikan pergeseran kotak hijau dan catat angka grid x, y yang meleset!")
+# URL Portal Publik Forio Epicenter Anda
+URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
+
+st.markdown(
+    """
+    <style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 0rem;
+    }
+    h1 {
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+    .custom-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        color: #31333F;
+        border: 1px solid rgba(49, 51, 63, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.16s ease-in-out;
+        width: 100%;
+        height: 42px;
+    }
+    .custom-tab-btn:hover {
+        border-color: #ff4b4b;
+        color: #ff4b4b;
+        background-color: rgba(255, 75, 75, 0.05);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
+col_nav, _ = st.columns([2, 5])
+with col_nav:
+    st.markdown(
+        f'<a href="{URL_PORTAL_FORIO}" target="_blank" class="custom-tab-btn">🏠 Kembali ke Menu Utama</a>', 
+        unsafe_allow_html=True
+    )
+
+st.markdown("<h1>PFAD Biodiesel</h1>", unsafe_allow_html=True)
 
 # ==========================================
 # 2. MEMUAT BACKGROUND IMAGE
@@ -25,61 +74,66 @@ except FileNotFoundError:
     st.stop()
 
 # ==========================================
-# 3. KORDINAT TANGKI PEMBANTU (ATAS)
+# 3. KORDINAT AKURAT BERDASARKAN GRID ASLI (x0, y0, x1, y1)
 # ==========================================
-TANGKI_METANOL = [245, 370, 285, 470]
-TANGKI_H2SO4   = [245, 500, 285, 610]
-TANGKI_NAOH    = [410, 335, 455, 435]
+KOTAK_METANOL = [65, 110, 140, 230]
+KOTAK_H2SO4   = [65, 260, 140, 370]
+KOTAK_NAOH    = [300, 70, 360, 200]
 
-# ==========================================
-# 4. JALUR ALIRAN LENGKAP (8 TAHAPAN)
-# ==========================================
-y_flow = 850 
+# Posisi Y konstan untuk penanda panah kuning di bawah diagram proses
+y_arrow = 550 
 
+# Jalur Aliran Berurutan (8 Langkah Utama)
 flow_path = [
     {
-        'step_id': 'feedstock',
-        'x': 100, 'y': y_flow, 'label': 'Feedstock (PFAD)', 
-        'tank_area': [50, 100, 400, 500]
+        'step_id': 'feedstock_prep',
+        'x': 90, 'y': y_arrow, 'label': 'Persiapan Bahan Awal',
+        # Menyimpan banyak area untuk diaktifkan bersamaan pada langkah pertama
+        'multiple_areas': [
+            KOTAK_METANOL,
+            KOTAK_H2SO4,
+            [65, 420, 140, 520]  # KOTAK_PFAD
+        ]
     },
     {
         'step_id': 'reaktor1',
-        'x': 285, 'y': y_flow, 'label': 'Reaktor 1 Aktif', 
-        'tank_area': [300, 350, 400, 500]
+        'x': 320, 'y': y_arrow, 'label': 'Reaktor 1 Aktif', 
+        'tank_area': [295, 400, 360, 530]
     },
     {
         'step_id': 'separator1',
-        'x': 410, 'y': y_flow, 'label': 'Separator 1 Aktif', 
-        'tank_area': [450, 500, 400, 500]
+        'x': 420, 'y': y_arrow, 'label': 'Separator 1 Aktif', 
+        'tank_area': [390, 420, 460, 550]
     },
     {
         'step_id': 'reaktor2',
-        'x': 535, 'y': y_flow, 'label': 'Reaktor 2 Aktif', 
-        'tank_area': [490, 680, 580, 830]
+        'x': 510, 'y': y_arrow, 'label': 'Reaktor 2 Aktif', 
+        'tank_area': [480, 400, 545, 530]
     },
     {
         'step_id': 'separator2',
-        'x': 660, 'y': y_flow, 'label': 'Separator 2 Aktif', 
-        'tank_area': [620, 680, 700, 830]
+        'x': 640, 'y': y_arrow, 'label': 'Separator 2 Aktif', 
+        'tank_area': [610, 420, 680, 550]
     },
     {
         'step_id': 'washdrum',
-        'x': 740, 'y': y_flow, 'label': 'Wash Drum Aktif', 
-        'tank_area': [710, 680, 775, 830]
+        'x': 720, 'y': y_arrow, 'label': 'Wash Drum Aktif', 
+        'tank_area': [690, 420, 760, 550]
     },
     {
-        'x': 810, 'y': y_flow, 'label': 'Evaporator Aktif', 
-        'tank_area': [780, 680, 845, 830]
+        'step_id': 'evaporator',
+        'x': 800, 'y': y_arrow, 'label': 'Evaporator Aktif', 
+        'tank_area': [770, 420, 835, 550]
     },
     {
         'step_id': 'biodiesel',
-        'x': 950, 'y': y_flow, 'label': 'Produk Biodiesel', 
-        'tank_area': [900, 680, 1000, 830]
+        'x': 900, 'y': y_arrow, 'label': 'Produk Biodiesel', 
+        'tank_area': [870, 420, 935, 550]
     }
 ]
 
 # ==========================================
-# 5. LOGIKA ANIMASI JALUR PROSES + TAMPILAN GRID
+# 4. LOGIKA ANIMASI JALUR PROSES DENGAN KOTAK PRESISI
 # ==========================================
 placeholder = st.empty()
 render_count = 0
@@ -90,36 +144,46 @@ while True:
         
         fig = px.imshow(img)
         
-        # --- AKTIFKAN UTALITAS GRID UNTUK TRACKING ---
-        fig.update_xaxes(visible=True, showgrid=True, gridcolor="rgba(255, 0, 0, 0.35)", dtick=50)
-        fig.update_yaxes(visible=True, showgrid=True, gridcolor="rgba(255, 0, 0, 0.35)", dtick=50)
+        # Sembunyikan garis aksis koordinat untuk mode produksi/tampilan bersih
+        fig.update_xaxes(visible=False)
+        fig.update_yaxes(visible=False)
         
-        # 1. Gambar kotak hijau alur utama yang aktif
-        main_area = current['tank_area']
-        fig.add_shape(
-            type="rect",
-            x0=main_area[0], y0=main_area[1], x1=main_area[2], y1=main_area[3],
-            fillcolor="rgba(0, 255, 0, 0.4)",  
-            line=dict(color="LimeGreen", width=2),
-        )
-        
-        # 2. Logika kondisional tangki atas ikut berubah warna
-        if current.get('step_id') == 'reaktor1':
+        # 1. LOGIKA PEWARNAAN KOTAK HIJAU TRANSPARAN
+        if 'multiple_areas' in current:
+            # Jika langkah persiapan awal: Metanol, H2SO4, dan PFAD menyala bersamaan
+            for area in current['multiple_areas']:
+                fig.add_shape(
+                    type="rect",
+                    x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                    fillcolor="rgba(0, 255, 0, 0.4)",  
+                    line=dict(color="LimeGreen", width=2),
+                )
+        else:
+            # Langkah normal: nyalakan tangki proses utama yang bersangkutan
+            area = current['tank_area']
             fig.add_shape(
-                type="rect", x0=TANGKI_METANOL[0], y0=TANGKI_METANOL[1], x1=TANGKI_METANOL[2], y1=TANGKI_METANOL[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
+                type="rect",
+                x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                fillcolor="rgba(0, 255, 0, 0.4)",  
+                line=dict(color="LimeGreen", width=2),
             )
+            
+        # 2. LOGIKA KONDISIONAL TANGKI PROSES ATAS (BAHAN KIMIA TAMBAHAN)
+        if current['step_id'] == 'reaktor1':
+            # Saat Reaktor 1 aktif, Metanol & H2SO4 ikut menyala (menandakan suplai mengalir masuk)
+            for area in [KOTAK_METANOL, KOTAK_H2SO4]:
+                fig.add_shape(
+                    type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                    fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
+                )
+        elif current['step_id'] == 'reaktor2':
+            # Saat Reaktor 2 aktif, NaOH di bagian atas ikut menyala
             fig.add_shape(
-                type="rect", x0=TANGKI_H2SO4[0], y0=TANGKI_H2SO4[1], x1=TANGKI_H2SO4[2], y1=TANGKI_H2SO4[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
-            )
-        elif current.get('step_id') == 'reaktor2':
-            fig.add_shape(
-                type="rect", x0=TANGKI_NAOH[0], y0=TANGKI_NAOH[1], x1=TANGKI_NAOH[2], y1=TANGKI_NAOH[3],
+                type="rect", x0=KOTAK_NAOH[0], y0=KOTAK_NAOH[1], x1=KOTAK_NAOH[2], y1=KOTAK_NAOH[3],
                 fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
             )
 
-        # 3. Penanda panah animasi segitiga kuning
+        # 3. PENANDA PANAH SEGITIGA KUNING ANIMASI
         fig.add_scatter(
             x=[current['x']], y=[current['y']],
             mode="markers+text",
@@ -130,9 +194,8 @@ while True:
         )
         
         fig.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
-            height=700,
-            hovermode="closest"
+            margin=dict(l=5, r=5, t=5, b=5),
+            height=680
         )
         
         with placeholder.container():
