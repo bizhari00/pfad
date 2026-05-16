@@ -7,7 +7,7 @@ import time
 # 1. KONFIGURASI HALAMAN STREAMLIT
 # ==========================================
 st.set_page_config(
-    page_title="Monitoring Produksi Biodiesel",
+    page_title="PFAD Produksi Biodiesel",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
