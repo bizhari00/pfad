@@ -12,9 +12,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# URL Portal Publik Forio Epicenter Anda
-URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
-
 # Menghilangkan margin bawaan Streamlit agar layout grafik lebih luas
 st.markdown(
     """
@@ -28,29 +25,6 @@ st.markdown(
         font-family: 'Arial', sans-serif;
         margin-bottom: 20px;
     }
-    /* Style kustom untuk menyamakan tombol HTML dengan tema Streamlit */
-    .custom-back-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #ffffff;
-        color: #31333F;
-        border: 1px solid rgba(49, 51, 63, 0.2);
-        padding: 0.4rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        font-size: 1rem;
-        text-decoration: none;
-        cursor: pointer;
-        transition: background-color 0.16s ease-in-out;
-        width: 100%;
-        height: 42px;
-    }
-    .custom-back-btn:hover {
-        border-color: #ff4b4b;
-        color: #ff4b4b;
-        background-color: rgba(255, 75, 75, 0.05);
-    }
     </style>
     """,
     unsafe_allow_html=True
@@ -59,10 +33,12 @@ st.markdown(
 # --- NAVIGASI KEMBALI & JUDUL HALAMAN ---
 col_nav, _ = st.columns([2, 5])
 with col_nav:
-    # Menggunakan HTML Anchor dengan target="_top" untuk menjebol sandbox iframe Forio
-    st.markdown(
-        f'<a href="{URL_PORTAL_FORIO}" target="_top" class="custom-back-btn">🏠 Kembali ke Menu Utama</a>', 
-        unsafe_allow_html=True
+    # Menggunakan native komponen Streamlit dengan relative path agar lolos sandbox browser
+    st.link_button(
+        label="🏠 Kembali ke Menu Utama", 
+        url="/app/bustamiizhari/inl", 
+        use_container_width=True,
+        help="Klik di sini untuk kembali ke halaman utama Portal INL"
     )
 
 st.markdown("<h1>Monitoring Produksi Biodiesel</h1>", unsafe_allow_html=True)
