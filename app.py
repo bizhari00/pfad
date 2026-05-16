@@ -76,7 +76,7 @@ except FileNotFoundError:
 # ==========================================
 KOTAK_METANOL = [65, 110, 140, 230]
 KOTAK_H2SO4   = [65, 260, 140, 370]
-KOTAK_NAOH    = [370, 60, 420, 140]
+KOTAK_NAOH    = [370, 40, 420, 140]
 
 y_arrow = 550 
 
