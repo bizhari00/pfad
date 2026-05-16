@@ -75,7 +75,6 @@ flow_path = [
 # ==========================================
 # 4. LOGIKA ANIMASI JALUR PROSES (PENGGANTI INTERVAL)
 # ==========================================
-# Menggunakan st.empty sebagai wadah dinamis yang akan di-refresh terus menerus
 placeholder = st.empty()
 
 # Loop terus-menerus selama aplikasi terbuka di browser
@@ -110,13 +109,12 @@ while True:
         fig.update_yaxes(visible=False)
         fig.update_layout(
             margin=dict(l=5, r=5, t=5, b=5),
-            height=650,
-            use_container_width=True
+            height=650
         )
         
         # Mengisi wadah placeholder dengan grafik terbaru
         with placeholder.container():
             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
-        # Jeda waktu pergantian step proses (1.5 detik, sama dengan interval=1500 di Dash)
+        # Jeda waktu pergantian step proses (1.5 detik)
         time.sleep(1.5)
