@@ -73,7 +73,7 @@ except FileNotFoundError:
 # ==========================================
 # 3. KORDINAT AKURAT BERDASARKAN GRID ASLI (x0, y0, x1, y1)
 # ==========================================
-KOTAK_METANOL = [40, 80, 100, 230]
+KOTAK_METANOL = [40, 80, 100, 210]
 KOTAK_H2SO4   = [40, 240, 100, 370]
 KOTAK_NAOH    = [370, 40, 420, 140]
 
