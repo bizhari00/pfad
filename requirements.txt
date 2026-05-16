@@ -1,0 +1,6 @@
+dash
+plotly
+Pillow
+gunicorn
+pandas
+numpy
