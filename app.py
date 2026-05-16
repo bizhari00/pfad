@@ -12,8 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-URL_PORTAL_FORIO = "https://forio.com/app/bustamiizhari/inl"
-
+URL_PORTAL_FORIO = "https://forio.com/app/univ_sumaterautara/research-ptpn"
 st.markdown(
     """
     <style>
