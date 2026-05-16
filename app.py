@@ -1,3 +1,8 @@
+Berikut adalah Full Script lengkap untuk file app.py Anda. Di dalam kode ini, penanganan ID unik (key) menggunakan render_count sudah diintegrasikan langsung ke dalam perulangan while True agar Streamlit Cloud tidak memicu error StreamlitDuplicateElementId lagi.
+
+Silakan salin seluruh kode di bawah ini dan timpa (overwrite) isi file app.py Anda di GitHub secara keseluruhan:
+
+Python
 import streamlit as st
 import plotly.express as px
 from PIL import Image
@@ -73,16 +78,20 @@ flow_path = [
 ]
 
 # ==========================================
-# 4. LOGIKA ANIMASI JALUR PROSES (PENGGANTI INTERVAL)
+# 4. LOGIKA ANIMASI JALUR PROSES (DENGAN KEY DINAMIS)
 # ==========================================
+# Wadah dinamis untuk merender ulang chart tanpa membuat komponen baru di halaman
 placeholder = st.empty()
 
-# Loop terus-menerus selama aplikasi terbuka di browser
+# Counter global untuk menghasilkan ID elemen unik di setiap iterasi render
+render_count = 0
+
+# Loop tak terbatas untuk menyimulasikan dcc.Interval (SCADA real-time monitoring)
 while True:
     for step in range(len(flow_path)):
         current = flow_path[step]
         
-        # Membuat base figure Plotly dari gambar background
+        # Membuat base figure Plotly dari gambar skema pabrik
         fig = px.imshow(img)
         
         # --- EFEK PERUBAHAN WARNA BLOK ---
@@ -94,7 +103,7 @@ while True:
             line=dict(color="LimeGreen", width=2),
         )
         
-        # --- INDIKATOR ALIRAN ---
+        # --- INDIKATOR ALIRAN PROSES ---
         fig.add_scatter(
             x=[current['x']], y=[current['y']],
             mode="markers+text",
@@ -104,7 +113,7 @@ while True:
             textfont=dict(size=18, color="darkred", family="Arial Black")
         )
         
-        # Pengaturan layout grafik agar bersih dan responsif
+        # Pengaturan kebersihan canvas grafik
         fig.update_xaxes(visible=False)
         fig.update_yaxes(visible=False)
         fig.update_layout(
@@ -112,9 +121,17 @@ while True:
             height=650
         )
         
-        # Mengisi wadah placeholder dengan grafik terbaru
+        # Merender chart ke dalam kontainer kosong dengan key unik buatan
         with placeholder.container():
-            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(
+                fig, 
+                use_container_width=True, 
+                config={'displayModeBar': False}, 
+                key=f"plotly_render_{render_count}"
+            )
         
-        # Jeda waktu pergantian step proses (1.5 detik)
+        # Naikkan counter ID untuk iterasi berikutnya
+        render_count += 1
+        
+        # Jeda waktu pergantian langkah (1.5 detik)
         time.sleep(1.5)
