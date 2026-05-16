@@ -1,39 +1,77 @@
 import dash
-from dash import dcc, html, Input, Output
-import plotly.express as px
-from PIL import Image
-import os
+from dash import dcc, html
+from dash.dependencies import Input, Output
+import pandas as pd
+import numpy as np
 
-# Inisialisasi
+# 1. Inisialisasi Aplikasi Dash
 app = dash.Dash(__name__)
-server = app.server  # Penting untuk Forio/Cloud hosting
 
-# Memuat Background - Gunakan path yang relatif agar aman di server
-img_path = os.path.join(os.getcwd(), "rivaldi.png")
-img = Image.open(img_path)
+# [Opsional] Jika Anda membutuhkan objek server untuk WSGI (tidak masalah dibiarkan)
+server = app.server 
 
-# ... (Isi flow_path tetap sama seperti kode Anda) ...
-
+# 2. Arsitektur Layout Aplikasi Dash Anda
 app.layout = html.Div(
-    style={'display': 'flex', 'flexDirection': 'column', 'alignItems': 'center', 'backgroundColor': '#f4f7f6'}, 
+    style={
+        'backgroundImage': 'url("/assets/rivaldi.png")', # Pastikan folder & file sesuai di GitHub
+        'backgroundSize': 'cover',
+        'backgroundPosition': 'center',
+        'padding': '20px',
+        'color': '#ffffff',
+        'fontFamily': 'Arial, sans-serif'
+    },
     children=[
-        html.H1("Monitoring Produksi Biodiesel", style={'fontFamily': 'Arial'}),
+        html.H1("Simulasi Model Biodiesel PFAD", style={'textAlign': 'center', 'color': '#f1c40f'}),
+        html.P("Analisis kelayakan teknis dan hasil konversi Palm Fatty Acid Distillate.", style={'textAlign': 'center'}),
+        
+        html.Hr(style={'borderColor': '#f1c40f'}),
+        
+        # Area Kontrol / Input
         html.Div([
-            dcc.Graph(id='flow-graph', config={'displayModeBar': False}, style={'width': '90vw', 'height': '75vh'}),
-        ], style={'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '15px', 'boxShadow': '0px 10px 30px rgba(0,0,0,0.1)'}),
-        dcc.Interval(id='flow-interval', interval=1500, n_intervals=0)
+            html.Label("Kapasitas Umpan PFAD (Ton/Tahun):"),
+            dcc.Slider(
+                id='feedstock-slider',
+                min=10000,
+                max=200000,
+                step=5000,
+                value=50000,
+                marks={i: f'{i//1000}K' for i in range(10000, 200001, 30000)}
+            ),
+        ], style={'padding': '20px', 'backgroundColor': 'rgba(0,0,0,0.7)', 'borderRadius': '10px', 'marginBottom': '20px'}),
+        
+        # Area Output / Hasil
+        html.Div([
+            html.H3("Hasil Proyeksi Simulasi", style={'color': '#2ecc71'}),
+            html.Div(id='simulation-output', style={'fontSize': '18px', 'marginTop': '10px'})
+        ], style={'padding': '20px', 'backgroundColor': 'rgba(0,0,0,0.7)', 'borderRadius': '10px'})
     ]
 )
 
-# Callback tetap sama
+# 3. Logika Callback Simulasi (Contoh Rekayasa Proses Makro)
 @app.callback(
-    Output('flow-graph', 'figure'),
-    Input('flow-interval', 'n_intervals')
+    Output('simulation-output', 'js_string' if dash.__version__ >= '2.0.0' else 'children'),
+    Input('feedstock-slider', 'value')
 )
-def update_flow(n):
-    # ... (Logika update_flow Anda) ...
-    return fig
+def update_simulation(feedstock_value):
+    # Asumsi rasio konversi PFAD ke Biodiesel rata-rata ~ 85% - 90%
+    conversion_ratio = 0.88
+    biodiesel_yield = feedstock_value * conversion_ratio
+    gliserol_co_product = feedstock_value * 0.10
+    
+    return [
+        html.P(f"Total Bahan Baku (PFAD): {feedstock_value:,} Ton/Tahun"),
+        html.P(f"Proyeksi Hasil Biodiesel: {biodiesel_yield:,.2f} Ton/Tahun (Rasio: {conversion_ratio*100}%)"),
+        html.P(f"Produk Sampingan (Gliserol Crude): {gliserol_co_product:,.2f} Ton/Tahun")
+    ]
 
-if __name__ == '__main__':
-    # Saat running di lokal
-    app.run(debug=True, use_reloader=False)
+# ==============================================================================
+# Bagian Krusial: Jembatan Penyesuai untuk Server Streamlit Cloud
+# ==============================================================================
+import streamlit as st
+from streamlit_dash import streamlit_dash
+
+# Mengatur agar tampilan halaman Streamlit menggunakan mode melebar (wide)
+st.set_page_config(layout="wide", page_title="PFAD Biodiesel Simulation")
+
+# Perintah ini menggantikan jalurnya app.run(debug=True) yang memicu crash kemarin
+streamlit_dash(app)
