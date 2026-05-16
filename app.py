@@ -24,7 +24,7 @@ st.markdown(
         background-position: center;
         background-attachment: fixed;
     }
-    /* Wadah transparan gelap untuk teks agar mudah dibaca */
+    /* Wadah transparan gelap agar metrik & teks kontras dan mudah dibaca */
     .custom-container {
         background-color: rgba(0, 0, 0, 0.75);
         padding: 25px;
@@ -63,13 +63,14 @@ feedstock_value = st.slider(
     step=5000,
     format="%d"
 )
-st.markdown('</div>', unsafe_allow_index=False) # Menggunakan penutup div murni Streamlit
+# Perbaikan baris 66: Menggunakan unsafe_allow_html=True untuk penutup div
+st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ==========================================
 # 5. LOGIKA PERHITUNGAN REKAYASA PROSES
 # ==========================================
-# Asumsi rasio konversi PFAD ke Biodiesel rata-rata ~ 88%
+# Proyeksi neraca massa makro: konversi PFAD ke Biodiesel rata-rata ~ 88%
 conversion_ratio = 0.88
 biodiesel_yield = feedstock_value * conversion_ratio
 gliserol_co_product = feedstock_value * 0.10
@@ -80,9 +81,9 @@ gliserol_co_product = feedstock_value * 0.10
 # ==========================================
 st.markdown('<div class="custom-container">', unsafe_allow_html=True)
 st.markdown('<h3 style="color: #2ecc71;">📊 Hasil Proyeksi Simulasi</h3>', unsafe_allow_html=True)
-st.write("") # Memberikan sedikit ruang kosong
+st.write("") 
 
-# Menampilkan metrik hasil dengan layout 3 kolom yang rapi
+# Menampilkan metrik rekayasa proses dengan layout 3 kolom
 col1, col2, col3 = st.columns(3)
 
 with col1:
