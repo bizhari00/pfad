@@ -118,7 +118,7 @@ flow_path = [
     {
         'step_id': 'washdrum',
         'x': 720, 'y': y_arrow, 'label': 'Wash Drum Aktif', 
-        'tank_area': [890, 420, 950, 500]
+        'tank_area': [890, 400, 950, 500]
     },
     {
         'step_id': 'evaporator',
