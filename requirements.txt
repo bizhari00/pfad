@@ -4,3 +4,4 @@ Pillow
 gunicorn
 pandas
 numpy
+streamlit-dash
