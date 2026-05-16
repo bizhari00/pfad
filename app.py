@@ -1,109 +1,95 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
+import dash
+from dash import dcc, html, Input, Output
+import plotly.express as px
+from PIL import Image
 
-# ==========================================
-# 1. KONFIGURASI HALAMAN UTAMA STREAMLIT
-# ==========================================
-st.set_page_config(
-    page_title="PFAD Biodiesel Simulation",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+app = dash.Dash(__name__)
+server = app.server
+app = dash.Dash(__name__)
+
+
+# 1. Memuat Background
+img = Image.open("rivaldi.png")
+
+# 2. Definisi Jalur Aliran & Area Blok (Bounding Box)
+# tank_area berisi koordinat [x0, y0, x1, y1] untuk membuat kotak warna
+y_flow = 850 
+flow_path = [
+    {
+        'x': 100, 'y': y_flow, 'label': 'Persiapan Bahan', 
+        'tank_area': [50, 150, 150, 350] # Area tangki awal
+    },
+    {
+        'x': 285, 'y': y_flow, 'label': 'Reaktor 1 Aktif', 
+        'tank_area': [240, 680, 330, 830] # Area Reaktor 1
+    },
+    {
+        'x': 410, 'y': y_flow, 'label': 'Separator 1 Aktif', 
+        'tank_area': [370, 680, 450, 830] # Area Separator 1
+    },
+    {
+        'x': 535, 'y': y_flow, 'label': 'Reaktor 2 Aktif', 
+        'tank_area': [490, 680, 580, 830] # Area Reaktor 2
+    },
+    {
+        'x': 660, 'y': y_flow, 'label': 'Separator 2 Aktif', 
+        'tank_area': [620, 680, 700, 830] # Area Separator 2
+    },
+    {
+        'x': 950, 'y': y_flow, 'label': 'Produk Biodiesel', 
+        'tank_area': [900, 680, 1000, 830] # Area Tangki Akhir
+    }
+]
+
+# 3. Layout Dashboard
+app.layout = html.Div(
+    style={'display': 'flex', 'flexDirection': 'column', 'alignItems': 'center', 'backgroundColor': '#f4f7f6'}, 
+    children=[
+        html.H1("Monitoring Produksi Biodiesel", style={'fontFamily': 'Arial'}),
+        html.Div([
+            dcc.Graph(id='flow-graph', config={'displayModeBar': False}, style={'width': '90vw', 'height': '75vh'}),
+        ], style={'padding': '10px', 'backgroundColor': 'white', 'borderRadius': '15px', 'boxShadow': '0px 10px 30px rgba(0,0,0,0.1)'}),
+        dcc.Interval(id='flow-interval', interval=1500, n_intervals=0)
+    ]
 )
 
-# ==========================================
-# 2. GAYA VISUAL / BACKGROUND (CSS KUSTOM)
-# ==========================================
-st.markdown(
-    """
-    <style>
-    /* Mengatur latar belakang aplikasi menggunakan gambar */
-    .stApp {
-        background-image: url("/assets/rivaldi.png");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }
-    /* Wadah transparan gelap agar metrik & teks kontras dan mudah dibaca */
-    .custom-container {
-        background-color: rgba(0, 0, 0, 0.75);
-        padding: 25px;
-        border-radius: 10px;
-        color: #ffffff;
-        margin-bottom: 20px;
-        border: 1px solid #f1c40f;
-    }
-    h1, h2, h3 {
-        font-family: 'Arial', sans-serif;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
+# 4. Callback untuk Mengubah Warna Blok & Aliran
+@app.callback(
+    Output('flow-graph', 'figure'),
+    Input('flow-interval', 'n_intervals')
 )
-
-# ==========================================
-# 3. STRUKTUR HEADER APLIKASI
-# ==========================================
-st.markdown('<h1 style="text-align: center; color: #f1c40f;">Simulasi Model Biodiesel PFAD</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align: center; color: #ffffff;">Analisis kelayakan teknis dan hasil konversi Palm Fatty Acid Distillate.</p>', unsafe_allow_html=True)
-st.markdown('<hr style="border-color: #f1c40f;">', unsafe_allow_html=True)
-
-
-# ==========================================
-# 4. AREA KONTROL / PARAMETER INPUT
-# ==========================================
-st.markdown('<div class="custom-container">', unsafe_allow_html=True)
-st.subheader("⚙️ Parameter Kontrol Umpan")
-
-feedstock_value = st.slider(
-    label="Kapasitas Umpan PFAD (Ton/Tahun):",
-    min_value=10000,
-    max_value=200000,
-    value=50000,
-    step=5000,
-    format="%d"
-)
-# Perbaikan baris 66: Menggunakan unsafe_allow_html=True untuk penutup div
-st.markdown('</div>', unsafe_allow_html=True)
-
-
-# ==========================================
-# 5. LOGIKA PERHITUNGAN REKAYASA PROSES
-# ==========================================
-# Proyeksi neraca massa makro: konversi PFAD ke Biodiesel rata-rata ~ 88%
-conversion_ratio = 0.88
-biodiesel_yield = feedstock_value * conversion_ratio
-gliserol_co_product = feedstock_value * 0.10
-
-
-# ==========================================
-# 6. AREA OUTPUT / HASIL PROYEKSI SIMULASI
-# ==========================================
-st.markdown('<div class="custom-container">', unsafe_allow_html=True)
-st.markdown('<h3 style="color: #2ecc71;">📊 Hasil Proyeksi Simulasi</h3>', unsafe_allow_html=True)
-st.write("") 
-
-# Menampilkan metrik rekayasa proses dengan layout 3 kolom
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric(
-        label="Total Bahan Baku (PFAD)", 
-        value=f"{feedstock_value:,} Ton/Tahun"
+def update_flow(n):
+    step = n % len(flow_path)
+    current = flow_path[step]
+    
+    fig = px.imshow(img)
+    
+    # --- EFEK PERUBAHAN WARNA BLOK ---
+    # Menambahkan kotak transparan di atas area unit yang aktif
+    area = current['tank_area']
+    fig.add_shape(
+        type="rect",
+        x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+        fillcolor="rgba(0, 255, 0, 0.4)", # Hijau transparan
+        line=dict(color="LimeGreen", width=2),
     )
-
-with col2:
-    st.metric(
-        label="Proyeksi Hasil Biodiesel", 
-        value=f"{biodiesel_yield:,.2f} Ton/Tahun",
-        delta=f"Rasio Konversi: {conversion_ratio*100}%",
-        delta_color="normal"
+    
+    # --- INDIKATOR ALIRAN ---
+    fig.add_scatter(
+        x=[current['x']], y=[current['y']],
+        mode="markers+text",
+        marker=dict(size=35, color="yellow", symbol="triangle-right", line=dict(width=3, color="orange")),
+        text=[current['label']],
+        textposition="bottom center",
+        textfont=dict(size=18, color="darkred", family="Arial Black")
     )
+    
+    fig.update_xaxes(visible=False)
+    fig.update_yaxes(visible=False)
+    fig.update_layout(margin=dict(l=5, r=5, t=5, b=5))
+    
+    return fig
 
-with col3:
-    st.metric(
-        label="Produk Sampingan (Gliserol Crude)", 
-        value=f"{gliserol_co_product:,.2f} Ton/Tahun"
-    )
-
-st.markdown('</div>', unsafe_allow_html=True)
+if __name__ == '__main__':
+    # Menambahkan host='0.0.0.0' agar server terbuka untuk jaringan luar
+    app.run(debug=True, host='0.0.0.0', port=8050)
