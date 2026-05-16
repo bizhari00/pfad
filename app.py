@@ -40,7 +40,7 @@ flow_path = [
     {
         'step_id': 'feedstock',
         'x': 100, 'y': y_flow, 'label': 'Feedstock (PFAD)', 
-        'tank_area': [50, 150, 150, 350]
+        'tank_area': [50, 150, 350, 450]
     },
     {
         'step_id': 'reaktor1',
