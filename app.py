@@ -140,7 +140,7 @@ while True:
         fig.update_xaxes(visible=False)
         fig.update_yaxes(visible=False)
         
-        # 1. LOGIKA PEWARNAAN KOTAK HIJAU TRANSPARAN
+        # 1. LOGIKA PEWARNAAN KOTAK HIJAU TRANSPARAN TANGKI UTAMA
         if 'multiple_areas' in current:
             for area in current['multiple_areas']:
                 fig.add_shape(
@@ -154,18 +154,21 @@ while True:
                 fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2),
             )
             
-        # 2. LOGIKA KONDISIONAL TANGKI PROSES ATAS
+        # 2. LOGIKA KONDISIONAL TANGKI PROSES INPUT PENUNJANG
         if current['step_id'] == 'reaktor1':
+            # Reaktor 1 aktif mendampingi Metanol & H2SO4
             for area in [KOTAK_METANOL, KOTAK_H2SO4]:
                 fig.add_shape(
                     type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
                     fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
                 )
         elif current['step_id'] == 'reaktor2':
-            fig.add_shape(
-                type="rect", x0=KOTAK_NAOH[0], y0=KOTAK_NAOH[1], x1=KOTAK_NAOH[2], y1=KOTAK_NAOH[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
-            )
+            # Reaktor 2 aktif mendampingi NaOH DAN Metanol sekaligus
+            for area in [KOTAK_NAOH, KOTAK_METANOL]:
+                fig.add_shape(
+                    type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                    fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
+                )
 
         # 3. PENANDA PANAH SEGITIGA KUNING ANIMASI
         fig.add_scatter(
