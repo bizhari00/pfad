@@ -107,9 +107,9 @@ except FileNotFoundError:
 # ==============================================================================
 # 5. KORDINAT AKURAT BERDASARKAN GRID ASLI (x0, y0, x1, y1)
 # ==============================================================================
-KOTAK_METANOL = [40, 80, 100, 210]
-KOTAK_H2SO4   = [40, 240, 100, 370]
-KOTAK_NAOH    = [370, 40, 420, 140]
+KOTAK_METANOL = [30,72,101,183]
+KOTAK_H2SO4   = [38,236,102,343]
+KOTAK_NAOH    = [361, 24, 430,133]
 
 y_arrow = 550 
 
@@ -120,7 +120,7 @@ flow_path = [
         'multiple_areas': [
             KOTAK_METANOL,
             KOTAK_H2SO4,
-            [40, 400, 100, 520]
+            [34,393,110,497]
         ]
     },
     {
@@ -141,22 +141,22 @@ flow_path = [
     {
         'step_id': 'separator2',
         'x': 745, 'y': y_arrow, 'label': 'Separator 2 Aktif', 
-        'tank_area': [770, 410, 820, 500]
+        'tank_area': [758,393,832,482]
     },
     {
         'step_id': 'washdrum',
         'x': 920, 'y': y_arrow, 'label': 'Wash Drum Aktif', 
-        'tank_area': [890, 400, 950, 500]
+        'tank_area': [872,385,958,490]
     },
     {
         'step_id': 'evaporator',
         'x': 1025, 'y': y_arrow, 'label': 'Evaporator Aktif', 
-        'tank_area': [980, 410, 1050, 500]
+        'tank_area': [979,397,1054,500]
     },
     {
         'step_id': 'biodiesel',
         'x': 1200, 'y': y_arrow, 'label': 'Produk Biodiesel', 
-        'tank_area': [1150, 400, 1250, 530]
+        'tank_area': [1150, 400, 1225,499]
     }
 ]
 
