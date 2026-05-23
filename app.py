@@ -1,4 +1,3 @@
-
 import streamlit as st
 import plotly.express as px
 from PIL import Image
@@ -89,7 +88,6 @@ st.markdown(
 col_btn, col_title = st.columns([1.2, 2.8])
 
 with col_btn:
-    # use_container_width diatur False agar lebarnya dikunci aturan CSS di atas
     st.link_button("🏠 Kembali ke Menu Utama", "https://forio.com/app/univ_sumaterautara/research-ptpn", use_container_width=False)
 
 with col_title:
@@ -176,7 +174,7 @@ while True:
         fig.update_xaxes(visible=False, showgrid=False)
         fig.update_yaxes(visible=False, showgrid=False)
         
-        # 1. LOGIKA PEWARNAAN KOTAK HIJAU TRANSPARAN
+        # 1. LOGIKA PEWARNAAN KOTAK HIJAU TRANSPARAN UTAMA
         if 'multiple_areas' in current:
             for area in current['multiple_areas']:
                 fig.add_shape(
@@ -190,7 +188,7 @@ while True:
                 fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2),
             )
             
-        # 2. LOGIKA KONDISIONAL TANGKI PROSES ATAS
+        # 2. LOGIKA KONDISIONAL TANGKI PROSES TAMBAHAN (ATAS)
         if current['step_id'] == 'reaktor1':
             for area in [KOTAK_METANOL, KOTAK_H2SO4]:
                 fig.add_shape(
@@ -198,10 +196,12 @@ while True:
                     fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
                 )
         elif current['step_id'] == 'reaktor2':
-            fig.add_shape(
-                type="rect", x0=KOTAK_NAOH[0], y0=KOTAK_NAOH[1], x1=KOTAK_NAOH[2], y1=KOTAK_NAOH[3],
-                fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
-            )
+            # KUNCI PERUBAHAN: Loop ditambahkan agar KOTAK_NAOH dan KOTAK_METANOL aktif bersamaan
+            for area in [KOTAK_NAOH, KOTAK_METANOL]:
+                fig.add_shape(
+                    type="rect", x0=area[0], y0=area[1], x1=area[2], y1=area[3],
+                    fillcolor="rgba(0, 255, 0, 0.4)", line=dict(color="LimeGreen", width=2)
+                )
 
         # 3. PENANDA PANAH SEGITIGA KUNING ANIMASI
         fig.add_scatter(
